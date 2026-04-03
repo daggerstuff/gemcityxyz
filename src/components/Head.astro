@@ -24,11 +24,15 @@ const ogImage = image || (cleanPathname ? new URL(`/og${cleanPathname}.png`, Ast
 <head>
 <script is:inline>
   (function () {
-    const theme =
-      localStorage.getItem('theme') ||
-      (window.matchMedia('(prefers-color-scheme: dark)').matches
-        ? 'dark'
-        : 'light')
+    let storedTheme = null
+
+    try {
+      storedTheme = localStorage.getItem('theme')
+    } catch {
+      // Ignore storage errors (e.g., restricted browser contexts)
+    }
+
+    const theme = storedTheme || 'dark'
     document.documentElement.setAttribute('data-theme', theme)
   })()
 </script>

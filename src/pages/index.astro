@@ -1,10 +1,7 @@
 ---
 import BlogCard from '@/components/BlogCard.astro'
 import Link from '@/components/Link.astro'
-import NowPlayingWidget from '@/components/NowPlayingWidget.astro'
 import PageHead from '@/components/PageHead.astro'
-import { ErrorBoundary } from '@/components/react/ErrorBoundary'
-import Skills from '@/components/react/Skills'
 import { buttonVariants } from '@/components/ui/button'
 import { ICON_MAP, SITE, SOCIAL_LINKS } from '@/consts'
 import Layout from '@/layouts/Layout.astro'
@@ -55,40 +52,17 @@ const websiteSchema = {
   },
 }
 
-// Experience Timeline - Customize with your own experience
-type ExperienceItem = {
-  role: string
-  company: string
-  period: string
-  current?: boolean
-  icon: string
-  key: string
-}
+const highlights = [
+  'Designing human-centered AI systems that do not flatten human nuance.',
+  'Building practical web products while writing about the social cost of technology.',
+]
 
-// Customize your experience here
-const experience: ExperienceItem[] = [
-  {
-    role: 'AI Systems Architect',
-    company: 'Pixelated Empathy',
-    period: '2023 - Present',
-    current: true,
-    icon: 'lucide:brain-circuit',
-    key: 'Building enterprise-grade AI for emotional intelligence • Architecting systems that understand human nuance, not just pattern matching • Exploring the intersection of machine learning and human consciousness',
-  },
-  {
-    role: 'Full-Stack Developer',
-    company: 'Independent / Consulting',
-    period: '2020 - 2023',
-    icon: 'lucide:code-2',
-    key: 'Developed across the digital empire — from activist tech platforms to creative experiments • Specializing in AI integration, modern web stacks, and systems that challenge the status quo',
-  },
-  {
-    role: 'Systems Thinker',
-    company: 'The Digital Frontier',
-    period: 'Always',
-    icon: 'lucide:zap',
-    key: 'Constantly exploring the edge where technology meets society • Writing, building, and questioning • Code as craft, tech as resistance',
-  },
+const coreStack = [
+  'TypeScript',
+  'Astro',
+  'React',
+  'LLM Systems',
+  'Content Design',
 ]
 
 const emailLink = SOCIAL_LINKS.find((link) => link.label === 'Email')
@@ -108,7 +82,7 @@ const emailLink = SOCIAL_LINKS.find((link) => link.label === 'Email')
   <!-- Hero Section -->
   <section
     class="relative overflow-hidden rounded-xl border"
-    style="min-height: clamp(280px, 40vh, 400px);"
+    style="min-height: clamp(260px, 34vh, 340px);"
   >
     <!-- Gradient Background -->
     <div
@@ -123,7 +97,7 @@ const emailLink = SOCIAL_LINKS.find((link) => link.label === 'Email')
         <!-- Main Content -->
         <div class="min-w-0 flex-1 space-y-6">
           <!-- Heading -->
-          <div class="space-y-4" style="min-height: clamp(120px, 20vh, 180px);">
+          <div class="space-y-4">
             <h1
               class="text-4xl leading-[1.1] font-bold tracking-tight sm:text-5xl md:text-6xl"
               style="font-variation-settings: 'wght' 700;"
@@ -140,7 +114,7 @@ const emailLink = SOCIAL_LINKS.find((link) => link.label === 'Email')
           </div>
 
           <!-- CTA Buttons -->
-          <div class="flex flex-wrap items-center gap-3 pt-2">
+          <div class="flex flex-wrap items-center gap-3">
             <Link
               href="/blog"
               class={buttonVariants({ variant: 'default', size: 'lg' })}
@@ -150,9 +124,9 @@ const emailLink = SOCIAL_LINKS.find((link) => link.label === 'Email')
             </Link>
             <Link
               href="/about"
-              class={buttonVariants({ variant: 'outline', size: 'lg' })}
+              class={buttonVariants({ variant: 'ghost', size: 'lg' })}
             >
-              About me
+              Explore my work
             </Link>
           </div>
 
@@ -192,68 +166,42 @@ const emailLink = SOCIAL_LINKS.find((link) => link.label === 'Email')
     </div>
   </section>
 
-  <!-- Experience Timeline -->
+  <!-- Current Focus -->
   <section class="mt-8">
     <div class="mb-6">
-      <h2 class="mb-2 text-2xl font-semibold">Experience</h2>
+      <h2 class="mb-2 text-2xl font-semibold">Current Focus</h2>
       <p class="text-muted-foreground text-sm">
-        Professional journey and achievements
+        What I am building and writing about right now.
       </p>
     </div>
 
-    <div class="space-y-6">
-      {
-        experience.map((exp, index) => (
-          <div class="relative">
-            {index < experience.length - 1 && (
-              <div
-                class="bg-border absolute top-8 bottom-0 left-[11px] w-px"
-                aria-hidden="true"
-              />
-            )}
-
-            <div class="flex gap-4">
-              <div
-                class={`ring-background relative z-10 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full ring-4 ${
-                  exp.current
-                    ? 'bg-primary text-primary-foreground shadow-primary/20 shadow-lg'
-                    : 'bg-muted text-muted-foreground'
-                }`}
-              >
-                <Icon name={exp.icon} class="size-3.5" />
-              </div>
-
-              <div class="min-w-0 flex-1 pb-2">
-                <div class="mb-1">
-                  <h3 class="text-lg leading-tight font-semibold">
-                    {exp.role}
-                  </h3>
-                  <p class="text-muted-foreground text-sm">
-                    {exp.company} · {exp.period}
-                  </p>
-                </div>
-                <p class="text-muted-foreground/90 mt-2 text-sm leading-relaxed">
-                  {exp.key}
-                </p>
-              </div>
-            </div>
-          </div>
-        ))
-      }
+    <div class="space-y-4">
+      <ul class="space-y-3" aria-label="Current focus areas">
+        {
+          highlights.map((item) => (
+            <li class="text-muted-foreground border-border/50 bg-muted/20 rounded-md border px-4 py-3 text-sm leading-relaxed">
+              {item}
+            </li>
+          ))
+        }
+      </ul>
+      <ul class="flex flex-wrap items-center gap-2" aria-label="Core stack">
+        {
+          coreStack.map((item) => (
+            <li class="bg-background text-muted-foreground rounded-full border px-2.5 py-1 text-xs font-medium">
+              {item}
+            </li>
+          ))
+        }
+      </ul>
+      <Link
+        href="/about"
+        class="text-primary hover:text-primary/80 inline-flex items-center gap-1.5 pt-1 text-sm font-medium transition-colors"
+      >
+        See full background
+        <Icon name="lucide:arrow-right" class="size-4" />
+      </Link>
     </div>
-  </section>
-
-  <!-- Skills & Technologies (Optional) -->
-  <section class="mt-12">
-    <div class="mb-6">
-      <h2 class="mb-2 text-2xl font-semibold">Skills & Technologies</h2>
-      <p class="text-muted-foreground text-sm">
-        Technologies and tools I work with
-      </p>
-    </div>
-    <ErrorBoundary client:visible transition:persist="skills-error-boundary">
-      <Skills client:visible transition:persist="skills-section" />
-    </ErrorBoundary>
   </section>
 
   <!-- Latest from the blog -->
@@ -264,7 +212,7 @@ const emailLink = SOCIAL_LINKS.find((link) => link.label === 'Email')
           <div>
             <h2 class="mb-2 text-2xl font-semibold">Latest from the blog</h2>
             <p class="text-muted-foreground text-sm">
-              Recent insights and articles
+              Recent writing and experiments.
             </p>
           </div>
           <Link
@@ -322,72 +270,28 @@ const emailLink = SOCIAL_LINKS.find((link) => link.label === 'Email')
     )
   }
 
-  <!-- Live Portfolio Status -->
+  <!-- Compact Contact CTA -->
   <section class="mt-12">
-    <div class="mx-auto max-w-2xl">
-      <NowPlayingWidget />
-    </div>
-  </section>
-
-  <!-- CTA Section -->
-  <section class="mt-12 sm:mt-24">
-    <div class="mx-auto max-w-2xl">
-      <div class="relative mb-12">
-        <div class="absolute inset-0 flex items-center" aria-hidden="true">
-          <div class="border-border w-full border-t"></div>
-        </div>
-        <div class="relative flex justify-center">
-          <div
-            class="bg-background border-border flex items-center gap-2.5 rounded-full border px-4 py-2 shadow-sm"
+    <div
+      class="border-border/70 bg-muted/20 flex flex-wrap items-center justify-between gap-4 rounded-lg border px-4 py-4 sm:px-5"
+    >
+      <p class="text-muted-foreground text-sm leading-relaxed">
+        Open to thoughtful collaborations and weird internet ideas.
+      </p>
+      {
+        emailLink && (
+          <Link
+            href={emailLink.href}
+            class={
+              buttonVariants({ variant: 'outline' }) +
+              ' inline-flex items-center gap-2'
+            }
           >
-            <span class="relative flex h-1.5 w-1.5">
-              <span
-                class="bg-primary absolute inline-flex h-full w-full animate-ping rounded-full opacity-75"
-              ></span>
-              <span
-                class="bg-primary relative inline-flex h-1.5 w-1.5 rounded-full"
-              ></span>
-            </span>
-            <span
-              class="text-muted-foreground text-xs font-medium tracking-wider uppercase"
-              >Available</span
-            >
-          </div>
-        </div>
-      </div>
-
-      <div class="space-y-6 text-center">
-        <div class="space-y-2">
-          <h2
-            class="text-foreground text-4xl leading-tight font-semibold tracking-tight sm:text-5xl md:text-6xl"
-          >
-            Let's connect
-          </h2>
-        </div>
-        <p
-          class="text-muted-foreground mx-auto max-w-xl text-lg leading-relaxed sm:text-xl"
-        >
-          Building the future while critiquing the present. Got a project, idea,
-          or just want to argue about AI?
-        </p>
-        <div class="pt-4">
-          {
-            emailLink && (
-              <Link
-                href={emailLink.href}
-                class="group bg-foreground text-background hover:bg-foreground/90 focus-visible:ring-ring inline-flex items-center gap-2.5 rounded-lg px-7 py-3.5 text-base font-medium transition-all duration-200 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
-              >
-                <Icon name="lucide:mail" class="size-4" />
-                <span>Drop a line</span>
-                <Icon
-                  name="lucide:arrow-right"
-                  class="size-4 transition-transform group-hover:translate-x-1"
-                />
-              </Link>
-            )
-          }
-        </div>
-      </div>
+            <Icon name="lucide:mail" class="size-4" />
+            Contact me
+          </Link>
+        )
+      }
     </div>
   </section>
 </Layout>

@@ -1,6 +1,6 @@
 ---
 import { Button } from '@/components/ui/button'
-import { Sun, Moon } from 'lucide-react'
+import { Moon, Sun } from 'lucide-react'
 ---
 
 <Button
@@ -17,10 +17,15 @@ import { Sun, Moon } from 'lucide-react'
 
 <script is:inline data-astro-rerun>
   ;(() => {
-    const theme =
-      localStorage?.getItem('theme') === 'dark'
-        ? 'dark'
-        : 'light'
+    let storedTheme = null
+
+    try {
+      storedTheme = localStorage.getItem('theme')
+    } catch {
+      // Ignore storage errors (e.g., restricted browser contexts)
+    }
+
+    const theme = storedTheme === 'light' ? 'light' : 'dark'
     document.documentElement.setAttribute('data-theme', theme)
   })()
 </script>
@@ -34,5 +39,7 @@ import { Sun, Moon } from 'lucide-react'
     localStorage.setItem('theme', newTheme)
   }
 
-  document.getElementById('theme-toggle')?.addEventListener('click', handleToggleClick)
+  document
+    .getElementById('theme-toggle')
+    ?.addEventListener('click', handleToggleClick)
 </script>
