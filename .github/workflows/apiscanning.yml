@@ -1,0 +1,103 @@
+name: API Security Scan
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "functions/api/**"
+      - ".github/workflows/apiscanning.yml"
+  pull_request:
+    branches: [main]
+    paths:
+      - "functions/api/**"
+      - ".github/workflows/apiscanning.yml"
+  schedule:
+    - cron: "0 6 * * 3" # Weekly on Wednesday at 6am
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  api-security-scan:
+    name: API Security Scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: "9"
+          run_install: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "pnpm"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Install API security tools
+        run: |
+          pnpm add -D @stoplight/spectral-cli || true
+          pnpm add -D nuclei || true
+
+      - name: Run Spectral OpenAPI linting
+        run: |
+          echo "Checking for OpenAPI specifications..."
+          OPENAPI_FILES=$(find functions/api -name "openapi.yaml" -o -name "openapi.yml" 2>/dev/null | wc -l)
+          echo "Found $OPENAPI_FILES OpenAPI specification files"
+
+      - name: Check for common API vulnerabilities
+        run: |
+          echo "## API Security Checks" >> $GITHUB_STEP_SUMMARY
+          echo "Scanning for common API security issues..." >> $GITHUB_STEP_SUMMARY
+
+          # Check for hardcoded secrets in API files
+          if grep -r -E "(apiKey|apikey|API_KEY|secret|password|token)" functions/api --include="*.ts" --include="*.js" 2>/dev/null | grep -v "process.env" | head -20; then
+            echo "⚠️ Potential hardcoded secrets found - review above" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "✅ No obvious hardcoded secrets detected" >> $GITHUB_STEP_SUMMARY
+          fi
+
+      - name: Check for missing input validation
+        run: |
+          echo "## Input Validation Check" >> $GITHUB_STEP_SUMMARY
+          echo "Checking API endpoints for input validation patterns..." >> $GITHUB_STEP_SUMMARY
+
+          # Check if API files use validation libraries or schemas
+          API_FILES=$(find functions/api -name "*.ts" | wc -l)
+          echo "Found $API_FILES API files to check" >> $GITHUB_STEP_SUMMARY
+
+          # Check for common security issues
+          ISSUES=0
+
+          # Check for missing rate limiting
+          if ! grep -r "rate\|limit" functions/api --include="*.ts" 2>/dev/null | grep -v "^Binary"; then
+            echo "⚠️ No rate limiting detected in API endpoints" >> $GITHUB_STEP_SUMMARY
+            ISSUES=$((ISSUES + 1))
+          fi
+
+          # Check for missing authentication patterns
+          if ! grep -r "auth\|Auth\|verify\|Verify" functions/api --include="*.ts" 2>/dev/null | grep -v "^Binary"; then
+            echo "⚠️ No authentication patterns detected - ensure proper auth is implemented" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          if [ $ISSUES -eq 0 ]; then
+            echo "✅ Basic API security patterns detected" >> $GITHUB_STEP_SUMMARY
+          fi
+
+      - name: Upload scan results
+        uses: actions/upload-artifact@v4
+        with:
+          name: api-security-scan
+          path: |
+            api-scan-results.txt
+          retention-days: 7

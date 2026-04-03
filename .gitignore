@@ -14,6 +14,7 @@ dist/
 
 # production
 /build
+.agent/
 
 # misc
 .DS_Store
@@ -35,3 +36,6 @@ yarn-error.log*
 *.tsbuildinfo
 .claude/
 .vscode
+CLAUDE.md
+TRAFFIC_FLOW_STRATEGY.md
+docs

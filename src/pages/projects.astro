@@ -1,0 +1,266 @@
+---
+import Breadcrumbs from '@/components/Breadcrumbs.astro'
+import Link from '@/components/Link.astro'
+import PageHead from '@/components/PageHead.astro'
+import { buttonVariants } from '@/components/ui/button'
+import Layout from '@/layouts/Layout.astro'
+import { cn } from '@/lib/utils'
+import { Icon } from 'astro-icon/components'
+
+// Projects data
+const projects = [
+  {
+    domain: 'gemcity.xyz',
+    title: 'Gem City',
+    tagline:
+      'The central nexus. Thought, code, rebellion, and creative expression — music, art, and unfiltered ideas.',
+    status: 'live',
+    category: 'hub',
+    tech: ['Astro', 'Tailwind', 'Vercel'],
+    featured: true,
+    icon: 'lucide:gem',
+    description:
+      'Personal blog and digital embassy for tech discourse, AI exploration, and forward-thinking insurrection.',
+  },
+  {
+    domain: 'pixelatedempathy.com',
+    title: 'Pixelated Empathy',
+    tagline: 'Enterprise-grade AI for emotional intelligence. The flagship.',
+    status: 'live',
+    category: 'enterprise',
+    tech: ['Python', 'FastAPI', 'PostgreSQL', 'OpenAI'],
+    featured: true,
+    icon: 'lucide:brain-circuit',
+    description:
+      'Enterprise-grade AI for emotional intelligence. Building systems that understand human nuance.',
+  },
+  {
+    domain: 'chadisfaction.tech',
+    title: 'Chadisfaction',
+    tagline: 'Technical playground. Code experiments and dev projects.',
+    status: 'live',
+    category: 'tech',
+    tech: ['Next.js', 'TypeScript', 'Rust'],
+    icon: 'lucide:code-2',
+    description:
+      'Technical playground for code experiments and development projects.',
+  },
+  {
+    domain: 'acab.lol',
+    title: 'ACAB',
+    tagline: 'Security research and activist tech. Tools for the resistance.',
+    status: 'live',
+    category: 'activism',
+    tech: ['Privacy', 'Security', 'Tor'],
+    icon: 'lucide:shield',
+    description:
+      'Security research and activist technology. Tools for the resistance.',
+  },
+  {
+    domain: 'bantesla.lol',
+    title: 'Ban Tesla',
+    tagline: 'Critical tech analysis. Questioning the cult of personality.',
+    status: 'live',
+    category: 'activism',
+    tech: ['Satire', 'Data Viz', 'React'],
+    icon: 'lucide:car',
+    description:
+      'Critical tech analysis questioning the cult of personality around tech billionaires.',
+  },
+]
+
+const statusColors = {
+  live: 'bg-emerald-500/10 text-emerald-500 border-emerald-500/20',
+  dev: 'bg-amber-500/10 text-amber-500 border-amber-500/20',
+  concept: 'bg-muted text-muted-foreground border-border',
+}
+
+// Generate SoftwareSourceCode schema for each project
+const projectSchemas = projects.map((project) => ({
+  '@context': 'https://schema.org',
+  '@type': 'SoftwareSourceCode',
+  name: project.title,
+  description: project.description || project.tagline,
+  url: `https://${project.domain}`,
+  programmingLanguage: project.tech.join(', '),
+  codeRepository: `https://github.com/nochadisfaction/${project.domain.replace('.', '-')}`,
+  status: project.status === 'live' ? 'Active' : 'Development',
+}))
+
+// Generate ItemList schema for the projects collection
+const projectsListSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'ItemList',
+  name: 'Gem City Projects',
+  description:
+    'A constellation of domains serving a distinct purpose in the broader mission.',
+  numberOfItems: projects.length,
+  itemListElement: projects.map((project, index) => ({
+    '@type': 'ListItem',
+    position: index + 1,
+    item: {
+      '@type': 'SoftwareSourceCode',
+      name: project.title,
+      description: project.description || project.tagline,
+      url: `https://${project.domain}`,
+    },
+  })),
+}
+---
+
+<Layout class="max-w-3xl">
+  <PageHead
+    slot="head"
+    title="Projects"
+    description="The digital empire — a constellation of domains, each serving a distinct purpose."
+  />
+
+  <!-- SoftwareSourceCode Schema for SEO -->
+  {
+    projectSchemas.map((schema) => (
+      <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+    ))
+  }
+  <script
+    type="application/ld+json"
+    set:html={JSON.stringify(projectsListSchema)}
+  />
+
+  <Breadcrumbs items={[{ label: 'Projects', icon: 'lucide:folder' }]} />
+
+  <section class="flex flex-col gap-8">
+    <!-- Header -->
+    <div class="flex flex-col gap-4">
+      <div>
+        <h1 class="text-3xl font-bold md:text-4xl">Projects</h1>
+        <p class="text-muted-foreground mt-1 font-mono text-sm">
+          The digital empire
+        </p>
+      </div>
+      <p class="text-muted-foreground max-w-2xl leading-relaxed">
+        A constellation of domains, each serving a distinct purpose in the
+        broader mission. From enterprise AI to activist tech, this is the
+        landscape I operate within.
+      </p>
+    </div>
+
+    <!-- Featured Projects -->
+    <div class="space-y-4">
+      {
+        projects
+          .filter((p) => p.featured)
+          .map((project) => (
+            <div class="from-primary/5 via-background to-background relative overflow-hidden rounded-xl border bg-gradient-to-br p-6">
+              <div class="flex items-start gap-4">
+                <div class="bg-primary/10 flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-lg">
+                  <Icon name={project.icon} class="text-primary size-6" />
+                </div>
+                <div class="min-w-0 flex-1">
+                  <div class="mb-1 flex items-center gap-2">
+                    <h2 class="text-xl font-semibold">{project.title}</h2>
+                    <span
+                      class={cn(
+                        'rounded-full border px-2 py-0.5 text-xs',
+                        statusColors[
+                          project.status as keyof typeof statusColors
+                        ],
+                      )}
+                    >
+                      {project.status}
+                    </span>
+                  </div>
+                  <p class="text-muted-foreground mb-3 text-sm">
+                    {project.tagline}
+                  </p>
+                  <div class="mb-4 flex flex-wrap gap-1.5">
+                    {project.tech.map((tech) => (
+                      <span class="bg-muted text-muted-foreground rounded-md px-2 py-1 text-xs">
+                        {tech}
+                      </span>
+                    ))}
+                  </div>
+                  <Link
+                    href={`https://${project.domain}`}
+                    class={buttonVariants({ variant: 'default', size: 'sm' })}
+                    external
+                  >
+                    Visit {project.domain}
+                    <Icon name="lucide:external-link" class="ml-1 size-3.5" />
+                  </Link>
+                </div>
+              </div>
+            </div>
+          ))
+      }
+    </div>
+
+    <!-- Other Projects Grid -->
+    <div class="grid gap-4 sm:grid-cols-2">
+      {
+        projects
+          .filter((p) => !p.featured)
+          .map((project) => (
+            <div class="hover:border-primary/30 group relative overflow-hidden rounded-xl border p-5 transition-colors">
+              <div class="mb-3 flex items-start gap-3">
+                <div class="bg-muted group-hover:bg-primary/10 flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg transition-colors">
+                  <Icon
+                    name={project.icon}
+                    class="text-muted-foreground group-hover:text-primary size-5 transition-colors"
+                  />
+                </div>
+                <div class="min-w-0 flex-1">
+                  <div class="flex items-center gap-2">
+                    <h3 class="font-semibold">{project.title}</h3>
+                    <span
+                      class={cn(
+                        'rounded-full border px-1.5 py-0.5 text-xs',
+                        statusColors[
+                          project.status as keyof typeof statusColors
+                        ],
+                      )}
+                    >
+                      {project.status}
+                    </span>
+                  </div>
+                  <p class="text-muted-foreground text-xs">{project.domain}</p>
+                </div>
+              </div>
+              <p class="text-muted-foreground mb-3 text-sm">
+                {project.tagline}
+              </p>
+              <div class="flex flex-wrap gap-1">
+                {project.tech.slice(0, 3).map((tech) => (
+                  <span class="bg-muted/50 text-muted-foreground rounded px-1.5 py-0.5 text-xs">
+                    {tech}
+                  </span>
+                ))}
+              </div>
+              <a
+                href={`https://${project.domain}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="absolute inset-0"
+                aria-label={`Visit ${project.domain}`}
+              />
+            </div>
+          ))
+      }
+    </div>
+
+    <!-- CTA -->
+    <div class="border-border mt-4 border-t pt-8">
+      <div class="space-y-4 text-center">
+        <p class="text-muted-foreground">
+          Interested in collaborating on something that matters?
+        </p>
+        <Link
+          href="mailto:chad@gemcity.xyz"
+          class={buttonVariants({ variant: 'outline' })}
+        >
+          <Icon name="lucide:mail" class="mr-2 size-4" />
+          Get in touch
+        </Link>
+      </div>
+    </div>
+  </section>
+</Layout>
