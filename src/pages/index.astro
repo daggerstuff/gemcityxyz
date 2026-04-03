@@ -15,379 +15,379 @@ import { Icon } from 'astro-icon/components'
 // Error handling for fetching recent posts
 let latestPosts: Awaited<ReturnType<typeof getRecentPosts>> = []
 try {
-	latestPosts = await getRecentPosts(2)
+  latestPosts = await getRecentPosts(2)
 } catch (error) {
-	console.error('Error fetching recent posts:', error)
+  console.error('Error fetching recent posts:', error)
 }
 
 // Person Schema for homepage SEO
 const personSchema = {
-	'@context': 'https://schema.org',
-	'@type': 'Person',
-	name: SITE.author,
-	url: SITE.href,
-	description: SITE.description
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: SITE.author,
+  url: SITE.href,
+  description: SITE.description,
 }
 
 // Organization Schema
 const organizationSchema = {
-	'@context': 'https://schema.org',
-	'@type': 'Organization',
-	name: SITE.title,
-	url: SITE.href,
-	description: SITE.description
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: SITE.title,
+  url: SITE.href,
+  description: SITE.description,
 }
 
 // Website Schema
 const websiteSchema = {
-	'@context': 'https://schema.org',
-	'@type': 'WebSite',
-	name: SITE.title,
-	url: SITE.href,
-	description: SITE.description,
-	potentialAction: {
-		'@type': 'SearchAction',
-		target: {
-			'@type': 'EntryPoint',
-			urlTemplate: `${SITE.href}/blog?q={search_term_string}`
-		},
-		'query-input': 'required name=search_term_string'
-	}
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: SITE.title,
+  url: SITE.href,
+  description: SITE.description,
+  potentialAction: {
+    '@type': 'SearchAction',
+    target: {
+      '@type': 'EntryPoint',
+      urlTemplate: `${SITE.href}/blog?q={search_term_string}`,
+    },
+    'query-input': 'required name=search_term_string',
+  },
 }
 
 // Experience Timeline - Customize with your own experience
 type ExperienceItem = {
-	role: string
-	company: string
-	period: string
-	current?: boolean
-	icon: string
-	key: string
+  role: string
+  company: string
+  period: string
+  current?: boolean
+  icon: string
+  key: string
 }
 
 // Customize your experience here
 const experience: ExperienceItem[] = [
-	{
-		role: 'AI Systems Architect',
-		company: 'Pixelated Empathy',
-		period: '2023 - Present',
-		current: true,
-		icon: 'lucide:brain-circuit',
-		key: 'Building enterprise-grade AI for emotional intelligence • Architecting systems that understand human nuance, not just pattern matching • Exploring the intersection of machine learning and human consciousness'
-	},
-	{
-		role: 'Full-Stack Developer',
-		company: 'Independent / Consulting',
-		period: '2020 - 2023',
-		icon: 'lucide:code-2',
-		key: 'Developed across the digital empire — from activist tech platforms to creative experiments • Specializing in AI integration, modern web stacks, and systems that challenge the status quo'
-	},
-	{
-		role: 'Systems Thinker',
-		company: 'The Digital Frontier',
-		period: 'Always',
-		icon: 'lucide:zap',
-		key: 'Constantly exploring the edge where technology meets society • Writing, building, and questioning • Code as craft, tech as resistance'
-	}
+  {
+    role: 'AI Systems Architect',
+    company: 'Pixelated Empathy',
+    period: '2023 - Present',
+    current: true,
+    icon: 'lucide:brain-circuit',
+    key: 'Building enterprise-grade AI for emotional intelligence • Architecting systems that understand human nuance, not just pattern matching • Exploring the intersection of machine learning and human consciousness',
+  },
+  {
+    role: 'Full-Stack Developer',
+    company: 'Independent / Consulting',
+    period: '2020 - 2023',
+    icon: 'lucide:code-2',
+    key: 'Developed across the digital empire — from activist tech platforms to creative experiments • Specializing in AI integration, modern web stacks, and systems that challenge the status quo',
+  },
+  {
+    role: 'Systems Thinker',
+    company: 'The Digital Frontier',
+    period: 'Always',
+    icon: 'lucide:zap',
+    key: 'Constantly exploring the edge where technology meets society • Writing, building, and questioning • Code as craft, tech as resistance',
+  },
 ]
 
 const emailLink = SOCIAL_LINKS.find((link) => link.label === 'Email')
 ---
 
 <Layout class="max-w-3xl">
-	<PageHead slot="head" title={SITE.title} fullTitle={true} />
+  <PageHead slot="head" title={SITE.title} fullTitle={true} />
 
-	<!-- Schema Markup for SEO -->
-	<script type="application/ld+json" set:html={JSON.stringify(personSchema)} />
-	<script
-		type="application/ld+json"
-		set:html={JSON.stringify(organizationSchema)}
-	/>
-	<script type="application/ld+json" set:html={JSON.stringify(websiteSchema)} />
+  <!-- Schema Markup for SEO -->
+  <script type="application/ld+json" set:html={JSON.stringify(personSchema)} />
+  <script
+    type="application/ld+json"
+    set:html={JSON.stringify(organizationSchema)}
+  />
+  <script type="application/ld+json" set:html={JSON.stringify(websiteSchema)} />
 
-	<!-- Hero Section -->
-	<section
-		class="relative overflow-hidden rounded-xl border"
-		style="min-height: clamp(280px, 40vh, 400px);"
-	>
-		<!-- Gradient Background -->
-		<div
-			class="from-primary/5 via-background to-background absolute inset-0 bg-gradient-to-br"
-			aria-hidden="true"
-		>
-		</div>
+  <!-- Hero Section -->
+  <section
+    class="relative overflow-hidden rounded-xl border"
+    style="min-height: clamp(280px, 40vh, 400px);"
+  >
+    <!-- Gradient Background -->
+    <div
+      class="from-primary/5 via-background to-background absolute inset-0 bg-gradient-to-br"
+      aria-hidden="true"
+    >
+    </div>
 
-		<!-- Content -->
-		<div class="relative z-10 p-8 md:p-12">
-			<div class="flex flex-col gap-8">
-				<!-- Main Content -->
-				<div class="min-w-0 flex-1 space-y-6">
-					<!-- Heading -->
-					<div class="space-y-4" style="min-height: clamp(120px, 20vh, 180px);">
-						<h1
-							class="text-4xl leading-[1.1] font-bold tracking-tight sm:text-5xl md:text-6xl"
-							style="font-variation-settings: 'wght' 700;"
-						>
-							Welcome to<br class="hidden sm:block" />
-							<span class="text-primary">{SITE.title}</span>
-						</h1>
-						<p
-							class="text-muted-foreground mt-4 max-w-xl text-base leading-relaxed md:text-lg"
-							style="min-height: 3rem;"
-						>
-							{SITE.description}
-						</p>
-					</div>
+    <!-- Content -->
+    <div class="relative z-10 p-8 md:p-12">
+      <div class="flex flex-col gap-8">
+        <!-- Main Content -->
+        <div class="min-w-0 flex-1 space-y-6">
+          <!-- Heading -->
+          <div class="space-y-4" style="min-height: clamp(120px, 20vh, 180px);">
+            <h1
+              class="text-4xl leading-[1.1] font-bold tracking-tight sm:text-5xl md:text-6xl"
+              style="font-variation-settings: 'wght' 700;"
+            >
+              Welcome to<br class="hidden sm:block" />
+              <span class="text-primary">{SITE.title}</span>
+            </h1>
+            <p
+              class="text-muted-foreground mt-4 max-w-xl text-base leading-relaxed md:text-lg"
+              style="min-height: 3rem;"
+            >
+              {SITE.description}
+            </p>
+          </div>
 
-					<!-- CTA Buttons -->
-					<div class="flex flex-wrap items-center gap-3 pt-2">
-						<Link
-							href="/blog"
-							class={buttonVariants({ variant: 'default', size: 'lg' })}
-						>
-							Read the blog
-							<Icon name="lucide:arrow-right" class="size-4" />
-						</Link>
-						<Link
-							href="/about"
-							class={buttonVariants({ variant: 'outline', size: 'lg' })}
-						>
-							About me
-						</Link>
-					</div>
+          <!-- CTA Buttons -->
+          <div class="flex flex-wrap items-center gap-3 pt-2">
+            <Link
+              href="/blog"
+              class={buttonVariants({ variant: 'default', size: 'lg' })}
+            >
+              Read the blog
+              <Icon name="lucide:arrow-right" class="size-4" />
+            </Link>
+            <Link
+              href="/about"
+              class={buttonVariants({ variant: 'outline', size: 'lg' })}
+            >
+              About me
+            </Link>
+          </div>
 
-					<!-- Social Icons -->
-					<div class="pt-2">
-						<ul class="flex flex-wrap items-center gap-2" role="list">
-							{
-								SOCIAL_LINKS.map(({ href, label }: SocialLink) => (
-									<li>
-										<Link
-											href={href}
-											aria-label={label}
-											title={label}
-											class={
-												buttonVariants({ variant: 'outline', size: 'icon' }) +
-												' bg-background/80 backdrop-blur-sm'
-											}
-											external={
-												href.startsWith('http') || href.startsWith('mailto:')
-											}
-										>
-											<Icon
-												name={
-													ICON_MAP[label as keyof typeof ICON_MAP] ||
-													'lucide:message-circle-question'
-												}
-												class="size-4"
-											/>
-										</Link>
-									</li>
-								))
-							}
-						</ul>
-					</div>
-				</div>
-			</div>
-		</div>
-	</section>
+          <!-- Social Icons -->
+          <div class="pt-2">
+            <ul class="flex flex-wrap items-center gap-2" role="list">
+              {
+                SOCIAL_LINKS.map(({ href, label }: SocialLink) => (
+                  <li>
+                    <Link
+                      href={href}
+                      aria-label={label}
+                      title={label}
+                      class={
+                        buttonVariants({ variant: 'outline', size: 'icon' }) +
+                        ' bg-background/80 backdrop-blur-sm'
+                      }
+                      external={
+                        href.startsWith('http') || href.startsWith('mailto:')
+                      }
+                    >
+                      <Icon
+                        name={
+                          ICON_MAP[label as keyof typeof ICON_MAP] ||
+                          'lucide:message-circle-question'
+                        }
+                        class="size-4"
+                      />
+                    </Link>
+                  </li>
+                ))
+              }
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
-	<!-- Experience Timeline -->
-	<section class="mt-8">
-		<div class="mb-6">
-			<h2 class="mb-2 text-2xl font-semibold">Experience</h2>
-			<p class="text-muted-foreground text-sm">
-				Professional journey and achievements
-			</p>
-		</div>
+  <!-- Experience Timeline -->
+  <section class="mt-8">
+    <div class="mb-6">
+      <h2 class="mb-2 text-2xl font-semibold">Experience</h2>
+      <p class="text-muted-foreground text-sm">
+        Professional journey and achievements
+      </p>
+    </div>
 
-		<div class="space-y-6">
-			{
-				experience.map((exp, index) => (
-					<div class="relative">
-						{index < experience.length - 1 && (
-							<div
-								class="bg-border absolute top-8 bottom-0 left-[11px] w-px"
-								aria-hidden="true"
-							/>
-						)}
+    <div class="space-y-6">
+      {
+        experience.map((exp, index) => (
+          <div class="relative">
+            {index < experience.length - 1 && (
+              <div
+                class="bg-border absolute top-8 bottom-0 left-[11px] w-px"
+                aria-hidden="true"
+              />
+            )}
 
-						<div class="flex gap-4">
-							<div
-								class={`ring-background relative z-10 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full ring-4 ${
-									exp.current ?
-										'bg-primary text-primary-foreground shadow-primary/20 shadow-lg'
-									:	'bg-muted text-muted-foreground'
-								}`}
-							>
-								<Icon name={exp.icon} class="size-3.5" />
-							</div>
+            <div class="flex gap-4">
+              <div
+                class={`ring-background relative z-10 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full ring-4 ${
+                  exp.current
+                    ? 'bg-primary text-primary-foreground shadow-primary/20 shadow-lg'
+                    : 'bg-muted text-muted-foreground'
+                }`}
+              >
+                <Icon name={exp.icon} class="size-3.5" />
+              </div>
 
-							<div class="min-w-0 flex-1 pb-2">
-								<div class="mb-1">
-									<h3 class="text-lg leading-tight font-semibold">
-										{exp.role}
-									</h3>
-									<p class="text-muted-foreground text-sm">
-										{exp.company} · {exp.period}
-									</p>
-								</div>
-								<p class="text-muted-foreground/90 mt-2 text-sm leading-relaxed">
-									{exp.key}
-								</p>
-							</div>
-						</div>
-					</div>
-				))
-			}
-		</div>
-	</section>
+              <div class="min-w-0 flex-1 pb-2">
+                <div class="mb-1">
+                  <h3 class="text-lg leading-tight font-semibold">
+                    {exp.role}
+                  </h3>
+                  <p class="text-muted-foreground text-sm">
+                    {exp.company} · {exp.period}
+                  </p>
+                </div>
+                <p class="text-muted-foreground/90 mt-2 text-sm leading-relaxed">
+                  {exp.key}
+                </p>
+              </div>
+            </div>
+          </div>
+        ))
+      }
+    </div>
+  </section>
 
-	<!-- Skills & Technologies (Optional) -->
-	<section class="mt-12">
-		<div class="mb-6">
-			<h2 class="mb-2 text-2xl font-semibold">Skills & Technologies</h2>
-			<p class="text-muted-foreground text-sm">
-				Technologies and tools I work with
-			</p>
-		</div>
-		<ErrorBoundary client:load transition:persist="skills-error-boundary">
-			<Skills client:load transition:persist="skills-section" />
-		</ErrorBoundary>
-	</section>
+  <!-- Skills & Technologies (Optional) -->
+  <section class="mt-12">
+    <div class="mb-6">
+      <h2 class="mb-2 text-2xl font-semibold">Skills & Technologies</h2>
+      <p class="text-muted-foreground text-sm">
+        Technologies and tools I work with
+      </p>
+    </div>
+    <ErrorBoundary client:visible transition:persist="skills-error-boundary">
+      <Skills client:visible transition:persist="skills-section" />
+    </ErrorBoundary>
+  </section>
 
-	<!-- Latest from the blog -->
-	{
-		latestPosts && latestPosts.length > 0 && (
-			<section class="mt-12">
-				<div class="mb-6 flex items-center justify-between">
-					<div>
-						<h2 class="mb-2 text-2xl font-semibold">Latest from the blog</h2>
-						<p class="text-muted-foreground text-sm">
-							Recent insights and articles
-						</p>
-					</div>
-					<Link
-						href="/blog"
-						class={
-							buttonVariants({ variant: 'ghost' }) +
-							' hidden items-center gap-1.5 sm:flex'
-						}
-					>
-						View all
-						<Icon name="lucide:arrow-right" class="size-4" />
-					</Link>
-				</div>
+  <!-- Latest from the blog -->
+  {
+    latestPosts && latestPosts.length > 0 && (
+      <section class="mt-12">
+        <div class="mb-6 flex items-center justify-between">
+          <div>
+            <h2 class="mb-2 text-2xl font-semibold">Latest from the blog</h2>
+            <p class="text-muted-foreground text-sm">
+              Recent insights and articles
+            </p>
+          </div>
+          <Link
+            href="/blog"
+            class={
+              buttonVariants({ variant: 'ghost' }) +
+              ' hidden items-center gap-1.5 sm:flex'
+            }
+          >
+            View all
+            <Icon name="lucide:arrow-right" class="size-4" />
+          </Link>
+        </div>
 
-				<div class="space-y-2">
-					{latestPosts.map((post) => (
-						<article>
-							<BlogCard entry={post} />
-						</article>
-					))}
-				</div>
+        <div class="space-y-2">
+          {latestPosts.map((post) => (
+            <article>
+              <BlogCard entry={post} />
+            </article>
+          ))}
+        </div>
 
-				<article class="mt-2 sm:hidden">
-					<Link
-						href="/blog"
-						aria-label="View all blog posts"
-						class="group border-border/50 bg-muted/20 hover:bg-muted/40 hover:border-primary/30 block rounded-md border px-2 py-3 transition-all duration-200"
-					>
-						<div class="flex items-center gap-3">
-							<div
-								class="bg-primary/10 dark:bg-primary/20 group-hover:bg-primary/20 dark:group-hover:bg-primary/30 flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg transition-colors"
-								aria-hidden="true"
-							>
-								<Icon name="lucide:library" class="text-primary size-5" />
-							</div>
-							<div class="min-w-0 flex-1">
-								<div class="flex items-center gap-2">
-									<span class="text-foreground group-hover:text-primary text-sm font-semibold transition-colors">
-										View all posts
-									</span>
-									<Icon
-										name="lucide:arrow-right"
-										class="text-primary/70 group-hover:text-primary size-4 shrink-0 transition-all group-hover:translate-x-0.5"
-										aria-hidden="true"
-									/>
-								</div>
-								<p class="text-muted-foreground mt-0.5 text-xs">
-									Explore all articles and tutorials
-								</p>
-							</div>
-						</div>
-					</Link>
-				</article>
-			</section>
-		)
-	}
+        <article class="mt-2 sm:hidden">
+          <Link
+            href="/blog"
+            aria-label="View all blog posts"
+            class="group border-border/50 bg-muted/20 hover:bg-muted/40 hover:border-primary/30 block rounded-md border px-2 py-3 transition-all duration-200"
+          >
+            <div class="flex items-center gap-3">
+              <div
+                class="bg-primary/10 dark:bg-primary/20 group-hover:bg-primary/20 dark:group-hover:bg-primary/30 flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg transition-colors"
+                aria-hidden="true"
+              >
+                <Icon name="lucide:library" class="text-primary size-5" />
+              </div>
+              <div class="min-w-0 flex-1">
+                <div class="flex items-center gap-2">
+                  <span class="text-foreground group-hover:text-primary text-sm font-semibold transition-colors">
+                    View all posts
+                  </span>
+                  <Icon
+                    name="lucide:arrow-right"
+                    class="text-primary/70 group-hover:text-primary size-4 shrink-0 transition-all group-hover:translate-x-0.5"
+                    aria-hidden="true"
+                  />
+                </div>
+                <p class="text-muted-foreground mt-0.5 text-xs">
+                  Explore all articles and tutorials
+                </p>
+              </div>
+            </div>
+          </Link>
+        </article>
+      </section>
+    )
+  }
 
-	<!-- Live Portfolio Status -->
-	<section class="mt-12">
-		<div class="mx-auto max-w-2xl">
-			<NowPlayingWidget />
-		</div>
-	</section>
+  <!-- Live Portfolio Status -->
+  <section class="mt-12">
+    <div class="mx-auto max-w-2xl">
+      <NowPlayingWidget />
+    </div>
+  </section>
 
-	<!-- CTA Section -->
-	<section class="mt-12 sm:mt-24">
-		<div class="mx-auto max-w-2xl">
-			<div class="relative mb-12">
-				<div class="absolute inset-0 flex items-center" aria-hidden="true">
-					<div class="border-border w-full border-t"></div>
-				</div>
-				<div class="relative flex justify-center">
-					<div
-						class="bg-background border-border flex items-center gap-2.5 rounded-full border px-4 py-2 shadow-sm"
-					>
-						<span class="relative flex h-1.5 w-1.5">
-							<span
-								class="bg-primary absolute inline-flex h-full w-full animate-ping rounded-full opacity-75"
-							></span>
-							<span
-								class="bg-primary relative inline-flex h-1.5 w-1.5 rounded-full"
-							></span>
-						</span>
-						<span
-							class="text-muted-foreground text-xs font-medium tracking-wider uppercase"
-							>Available</span
-						>
-					</div>
-				</div>
-			</div>
+  <!-- CTA Section -->
+  <section class="mt-12 sm:mt-24">
+    <div class="mx-auto max-w-2xl">
+      <div class="relative mb-12">
+        <div class="absolute inset-0 flex items-center" aria-hidden="true">
+          <div class="border-border w-full border-t"></div>
+        </div>
+        <div class="relative flex justify-center">
+          <div
+            class="bg-background border-border flex items-center gap-2.5 rounded-full border px-4 py-2 shadow-sm"
+          >
+            <span class="relative flex h-1.5 w-1.5">
+              <span
+                class="bg-primary absolute inline-flex h-full w-full animate-ping rounded-full opacity-75"
+              ></span>
+              <span
+                class="bg-primary relative inline-flex h-1.5 w-1.5 rounded-full"
+              ></span>
+            </span>
+            <span
+              class="text-muted-foreground text-xs font-medium tracking-wider uppercase"
+              >Available</span
+            >
+          </div>
+        </div>
+      </div>
 
-			<div class="space-y-6 text-center">
-				<div class="space-y-2">
-					<h2
-						class="text-foreground text-4xl leading-tight font-semibold tracking-tight sm:text-5xl md:text-6xl"
-					>
-						Let's connect
-					</h2>
-				</div>
-				<p
-					class="text-muted-foreground mx-auto max-w-xl text-lg leading-relaxed sm:text-xl"
-				>
-					Building the future while critiquing the present. Got a project, idea,
-					or just want to argue about AI?
-				</p>
-				<div class="pt-4">
-					{
-						emailLink && (
-							<Link
-								href={emailLink.href}
-								class="group bg-foreground text-background hover:bg-foreground/90 focus-visible:ring-ring inline-flex items-center gap-2.5 rounded-lg px-7 py-3.5 text-base font-medium transition-all duration-200 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
-							>
-								<Icon name="lucide:mail" class="size-4" />
-								<span>Drop a line</span>
-								<Icon
-									name="lucide:arrow-right"
-									class="size-4 transition-transform group-hover:translate-x-1"
-								/>
-							</Link>
-						)
-					}
-				</div>
-			</div>
-		</div>
-	</section>
+      <div class="space-y-6 text-center">
+        <div class="space-y-2">
+          <h2
+            class="text-foreground text-4xl leading-tight font-semibold tracking-tight sm:text-5xl md:text-6xl"
+          >
+            Let's connect
+          </h2>
+        </div>
+        <p
+          class="text-muted-foreground mx-auto max-w-xl text-lg leading-relaxed sm:text-xl"
+        >
+          Building the future while critiquing the present. Got a project, idea,
+          or just want to argue about AI?
+        </p>
+        <div class="pt-4">
+          {
+            emailLink && (
+              <Link
+                href={emailLink.href}
+                class="group bg-foreground text-background hover:bg-foreground/90 focus-visible:ring-ring inline-flex items-center gap-2.5 rounded-lg px-7 py-3.5 text-base font-medium transition-all duration-200 focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+              >
+                <Icon name="lucide:mail" class="size-4" />
+                <span>Drop a line</span>
+                <Icon
+                  name="lucide:arrow-right"
+                  class="size-4 transition-transform group-hover:translate-x-1"
+                />
+              </Link>
+            )
+          }
+        </div>
+      </div>
+    </div>
+  </section>
 </Layout>

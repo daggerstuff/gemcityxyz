@@ -1,114 +1,114 @@
 ---
 // Gem City "Now Playing" widget showing live portfolio data
-const PORTFOLIO_STATUS_URL = 'https://vivi.rocks/api/status'
+const PORTFOLIO_STATUS_URL = '/api/status.json'
 
 interface PortfolioStatus {
-	activity: string
-	background?: { name: string }
-	music?: { isPlaying: boolean; track: string }
-	lastUpdated: string
-	portfolioUrl: string
+  activity: string
+  background?: { name: string }
+  music?: { isPlaying: boolean; track: string }
+  lastUpdated: string
+  portfolioUrl: string
 }
 
 let status: PortfolioStatus | null = null
 let error: string | null = null
 
 try {
-	const controller = new AbortController()
-	const timeoutId = setTimeout(() => controller.abort(), 5000)
+  const controller = new AbortController()
+  const timeoutId = setTimeout(() => controller.abort(), 5000)
 
-	const response = await fetch(PORTFOLIO_STATUS_URL, {
-		method: 'GET',
-		headers: { Accept: 'application/json' },
-		signal: controller.signal
-	})
+  const response = await fetch(PORTFOLIO_STATUS_URL, {
+    method: 'GET',
+    headers: { Accept: 'application/json' },
+    signal: controller.signal,
+  })
 
-	clearTimeout(timeoutId)
+  clearTimeout(timeoutId)
 
-	if (response.ok) {
-		const data = await response.json()
-		if (
-			data &&
-			typeof data.activity === 'string' &&
-			typeof data.lastUpdated === 'string'
-		) {
-			status = data as PortfolioStatus
-		} else {
-			error = 'Unexpected portfolio data'
-		}
-	} else {
-		error = 'Portfolio offline'
-	}
+  if (response.ok) {
+    const data = await response.json()
+    if (
+      data &&
+      typeof data.activity === 'string' &&
+      typeof data.lastUpdated === 'string'
+    ) {
+      status = data as PortfolioStatus
+    } else {
+      error = 'Unexpected portfolio data'
+    }
+  } else {
+    error = 'Portfolio offline'
+  }
 } catch (e: any) {
-	error = 'Portfolio offline'
+  error = 'Portfolio offline'
 }
 
 const formatTime = (isoString: string) => {
-	return (
-		new Date(isoString).toLocaleTimeString('en-US', {
-			hour: '2-digit',
-			minute: '2-digit',
-			timeZone: 'UTC'
-		}) + ' UTC'
-	)
+  return (
+    new Date(isoString).toLocaleTimeString('en-US', {
+      hour: '2-digit',
+      minute: '2-digit',
+      timeZone: 'UTC',
+    }) + ' UTC'
+  )
 }
 ---
 
 {
-	status && (
-		<div class="border-border/50 bg-muted/20 rounded-lg border p-4">
-			<div class="mb-3 flex items-center gap-2">
-				<span class="relative flex h-2 w-2">
-					<span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-75" />
-					<span class="relative inline-flex h-2 w-2 rounded-full bg-green-500" />
-				</span>
-				<span class="text-muted-foreground font-mono text-xs tracking-wider uppercase">
-					Live from vivi.rocks
-				</span>
-			</div>
+  status && (
+    <div class="border-border/50 bg-muted/20 rounded-lg border p-4">
+      <div class="mb-3 flex items-center gap-2">
+        <span class="relative flex h-2 w-2">
+          <span class="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-75" />
+          <span class="relative inline-flex h-2 w-2 rounded-full bg-green-500" />
+        </span>
+        <span class="text-muted-foreground font-mono text-xs tracking-wider uppercase">
+          Live from Gem City
+        </span>
+      </div>
 
-			<div class="space-y-2 text-sm">
-				<div class="flex items-start gap-2">
-					<span class="text-muted-foreground">Currently:</span>
-					<span class="text-foreground">{status.activity}</span>
-				</div>
+      <div class="space-y-2 text-sm">
+        <div class="flex items-start gap-2">
+          <span class="text-muted-foreground">Currently:</span>
+          <span class="text-foreground">{status.activity}</span>
+        </div>
 
-				{status.background && (
-					<div class="flex items-center gap-2">
-						<span class="text-muted-foreground">Staring at:</span>
-						<span class="text-foreground">{status.background.name}</span>
-					</div>
-				)}
+        {status.background && (
+          <div class="flex items-center gap-2">
+            <span class="text-muted-foreground">Staring at:</span>
+            <span class="text-foreground">{status.background.name}</span>
+          </div>
+        )}
 
-				{status.music?.isPlaying && (
-					<div class="flex items-center gap-2">
-						<span class="text-muted-foreground">Probably listening to:</span>
-						<span class="text-foreground italic">{status.music.track}</span>
-					</div>
-				)}
+        {status.music?.isPlaying && (
+          <div class="flex items-center gap-2">
+            <span class="text-muted-foreground">Probably listening to:</span>
+            <span class="text-foreground italic">{status.music.track}</span>
+          </div>
+        )}
 
-				<div class="text-muted-foreground/70 border-border/30 mt-2 flex items-center gap-2 border-t pt-2 text-xs">
-					<span>Updated: {formatTime(status.lastUpdated)}</span>
-					<span>|</span>
-					<a
-						href={status.portfolioUrl}
-						target="_blank"
-						rel="noopener noreferrer"
-						class="hover:text-primary transition-colors"
-					>
-						Visit portfolio →
-					</a>
-				</div>
-			</div>
-		</div>
-	)
+        <div class="text-muted-foreground/70 border-border/30 mt-2 flex items-center gap-2 border-t pt-2 text-xs">
+          <span>Updated: {formatTime(status.lastUpdated)}</span>
+          <span>|</span>
+          <a
+            href={status.portfolioUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="hover:text-primary transition-colors"
+          >
+            Visit portfolio →
+          </a>
+        </div>
+      </div>
+    </div>
+  )
 }
 
 {
-	error && (
-		<div class="border-border/50 bg-muted/10 text-muted-foreground rounded-lg border p-4 text-sm">
-			<p>Portfolio connection unavailable.</p>
-			<p class="mt-1 text-xs">Vivi might be in the zone. Try again later.</p>
-		</div>
-	)
+  error && (
+    <div class="border-border/50 bg-muted/10 text-muted-foreground rounded-lg border p-4 text-sm">
+      <p>Portfolio connection unavailable.</p>
+      <p class="mt-1 text-xs">Vivi might be in the zone. Try again later.</p>
+    </div>
+  )
 }

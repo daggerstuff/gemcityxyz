@@ -1,4 +1,4 @@
-import type { IconMap, SocialLink, Site } from '@/types'
+import type { IconMap, Site, SocialLink } from '@/types'
 
 export const SITE: Site = {
   title: 'Gem City',
@@ -58,7 +58,7 @@ export const NAV_LINKS: SocialLink[] = [
 
 export const SOCIAL_LINKS: SocialLink[] = [
   {
-    href: 'https://github.com/chadisfaction',
+    href: 'https://github.com/daggerstuff',
     label: 'GitHub',
   },
   {

@@ -1,5 +1,5 @@
-import { getCollection, render, type CollectionEntry } from 'astro:content'
-import { readingTime, calculateWordCountFromHtml } from '@/lib/utils'
+import { type CollectionEntry, getCollection, render } from 'astro:content'
+import { calculateWordCountFromHtml, readingTime } from '@/lib/utils'
 
 export async function getAllAuthors(): Promise<CollectionEntry<'authors'>[]> {
   return await getCollection('authors')
@@ -130,6 +130,47 @@ export async function getSortedTags(): Promise<
       const countDiff = b.count - a.count
       return countDiff !== 0 ? countDiff : a.tag.localeCompare(b.tag)
     })
+}
+
+export async function getRelatedPosts(
+  currentPostId: string,
+  count: number = 3,
+): Promise<CollectionEntry<'blog'>[]> {
+  const allPosts = await getAllPosts()
+  const currentPost = allPosts.find((post) => post.id === currentPostId)
+
+  if (
+    !currentPost ||
+    !currentPost.data.tags ||
+    currentPost.data.tags.length === 0
+  ) {
+    // If no tags, return recent posts excluding current
+    return allPosts.filter((post) => post.id !== currentPostId).slice(0, count)
+  }
+
+  const currentTags = new Set(currentPost.data.tags)
+
+  // Score each post by number of shared tags
+  const postsWithScores = allPosts
+    .filter((post) => post.id !== currentPostId)
+    .map((post) => {
+      const postTags = post.data.tags || []
+      const sharedTags = postTags.filter((tag) => currentTags.has(tag))
+      return {
+        post,
+        score: sharedTags.length,
+      }
+    })
+    .filter((item) => item.score > 0) // Only include posts with at least one shared tag
+    .sort((a, b) => {
+      // Sort by score (descending), then by date (descending)
+      if (b.score !== a.score) {
+        return b.score - a.score
+      }
+      return b.post.data.date.valueOf() - a.post.data.date.valueOf()
+    })
+
+  return postsWithScores.slice(0, count).map((item) => item.post)
 }
 
 export function getParentId(subpostId: string): string {
