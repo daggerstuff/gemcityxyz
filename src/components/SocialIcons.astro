@@ -3,18 +3,36 @@ import Link from '@/components/Link.astro'
 import { buttonVariants } from '@/components/ui/button'
 import { ICON_MAP } from '@/consts'
 import type { SocialLink } from '@/types'
-import { Icon } from 'astro-icon/components'
+import {
+  Github,
+  Twitter,
+  Mail,
+  Rss,
+  Globe,
+  Linkedin,
+  type LucideIcon,
+} from 'lucide-react'
 
 interface Props {
   links: SocialLink[]
 }
 
-const { links } = Astro.props
+const { links } = Astro.props as Props
+
+const ICON_COMPONENTS: Record<string, LucideIcon> = {
+  'lucide:globe': Globe,
+  'lucide:github': Github,
+  'lucide:linkedin': Linkedin,
+  'lucide:twitter': Twitter,
+  'lucide:mail': Mail,
+  'lucide:rss': Rss,
+}
 ---
 
 <ul class="flex flex-wrap gap-2" role="list">
-  {
-    links.map(({ href, label }) => (
+  {links.map(({ href, label }) => {
+    const IconComponent = ICON_COMPONENTS[ICON_MAP[label as keyof typeof ICON_MAP]] || Globe
+    return (
       <li>
         <Link
           href={href}
@@ -23,15 +41,9 @@ const { links } = Astro.props
           class={buttonVariants({ variant: 'outline', size: 'icon' })}
           external
         >
-          <Icon
-            name={
-              ICON_MAP[label as keyof typeof ICON_MAP] ||
-              'lucide:message-circle-question'
-            }
-            class="size-4"
-          />
+          <IconComponent className="size-4" />
         </Link>
       </li>
-    ))
-  }
+    )
+  })}
 </ul>

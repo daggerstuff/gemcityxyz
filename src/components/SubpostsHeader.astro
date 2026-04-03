@@ -23,9 +23,7 @@ const parentPost = isCurrentSubpost ? await getParentPost(currentPostId) : null
 const activePost = parentPost || currentPost
 const isActivePost = activePost?.id === currentPostId
 
-const activePostReadingTime = activePost
-  ? await getPostReadingTime(activePost.id)
-  : null
+const activePostReadingTime = activePost ? await getPostReadingTime(activePost.id) : null
 const activePostCombinedReadingTime =
   activePost && subposts.length > 0
     ? await getCombinedReadingTime(activePost.id)
@@ -94,20 +92,18 @@ const currentSubpostDetails = isCurrentSubpost
                         aria-hidden="true"
                       />
                       <div class="flex flex-col">
-                        <span class="line-clamp-2">
-                          {activePost.data.title}
-                        </span>
+                        <span class="line-clamp-2">{activePost.data.title}</span>
                         {activePostReadingTime && (
                           <span class="text-muted-foreground/80 text-xs">
                             {activePostReadingTime}
                             {activePostCombinedReadingTime &&
-                              activePostCombinedReadingTime !==
-                                activePostReadingTime && (
-                                <span>
-                                  {' '}
-                                  ({activePostCombinedReadingTime} total)
-                                </span>
-                              )}
+                            activePostCombinedReadingTime !==
+                              activePostReadingTime && (
+                              <span>
+                                {' '}
+                                ({activePostCombinedReadingTime} total)
+                              </span>
+                            )}
                           </span>
                         )}
                       </div>
@@ -123,20 +119,18 @@ const currentSubpostDetails = isCurrentSubpost
                         aria-hidden="true"
                       />
                       <div class="flex flex-col">
-                        <span class="line-clamp-2">
-                          {activePost.data.title}
-                        </span>
+                        <span class="line-clamp-2">{activePost.data.title}</span>
                         {activePostReadingTime && (
                           <span class="text-muted-foreground/80 hover:text-foreground/80 text-xs">
                             {activePostReadingTime}
                             {activePostCombinedReadingTime &&
-                              activePostCombinedReadingTime !==
-                                activePostReadingTime && (
-                                <span>
-                                  {' '}
-                                  ({activePostCombinedReadingTime} total)
-                                </span>
-                              )}
+                            activePostCombinedReadingTime !==
+                              activePostReadingTime && (
+                              <span>
+                                {' '}
+                                ({activePostCombinedReadingTime} total)
+                              </span>
+                            )}
                           </span>
                         )}
                       </div>
@@ -147,39 +141,40 @@ const currentSubpostDetails = isCurrentSubpost
 
               {subpostsWithReadingTime.length > 0 && (
                 <div class="ml-4 space-y-1">
-                  {subpostsWithReadingTime.map((subpost) =>
-                    currentPostId === subpost.id ? (
-                      <div class="text-foreground bg-muted mobile-subposts-active-item flex items-center gap-2 rounded-md px-2 py-1.5 text-sm font-medium">
-                        <Icon
-                          name="lucide:file-text"
-                          class="size-4 flex-shrink-0"
-                          aria-hidden="true"
-                        />
-                        <div class="flex flex-col">
-                          <span class="line-clamp-2">{subpost.data.title}</span>
-                          <span class="text-muted-foreground/80 text-xs">
-                            {subpost.readingTime}
-                          </span>
+                  {subpostsWithReadingTime.map(
+                    (subpost) =>
+                      currentPostId === subpost.id ? (
+                        <div class="text-foreground bg-muted mobile-subposts-active-item flex items-center gap-2 rounded-md px-2 py-1.5 text-sm font-medium">
+                          <Icon
+                            name="lucide:file-text"
+                            class="size-4 flex-shrink-0"
+                            aria-hidden="true"
+                          />
+                          <div class="flex flex-col">
+                            <span class="line-clamp-2">{subpost.data.title}</span>
+                            <span class="text-muted-foreground/80 text-xs">
+                              {subpost.readingTime}
+                            </span>
+                          </div>
                         </div>
-                      </div>
-                    ) : (
-                      <a
-                        href={`/blog/${subpost.id}`}
-                        class="mobile-subposts-link hover:text-foreground text-muted-foreground hover:bg-muted/50 flex items-center gap-2 rounded-md px-2 py-1.5 text-sm transition-colors"
-                      >
-                        <Icon
-                          name="lucide:file"
-                          class="size-4 flex-shrink-0"
-                          aria-hidden="true"
-                        />
-                        <div class="flex flex-col">
-                          <span class="line-clamp-2">{subpost.data.title}</span>
-                          <span class="text-muted-foreground/80 hover:text-foreground/80 text-xs">
-                            {subpost.readingTime}
-                          </span>
-                        </div>
-                      </a>
-                    ),
+                      ) : (
+                        <a
+                          href={`/blog/${subpost.id}`}
+                          class="mobile-subposts-link hover:text-foreground text-muted-foreground hover:bg-muted/50 flex items-center gap-2 rounded-md px-2 py-1.5 text-sm transition-colors"
+                        >
+                          <Icon
+                            name="lucide:file"
+                            class="size-4 flex-shrink-0"
+                            aria-hidden="true"
+                          />
+                          <div class="flex flex-col">
+                            <span class="line-clamp-2">{subpost.data.title}</span>
+                            <span class="text-muted-foreground/80 hover:text-foreground/80 text-xs">
+                              {subpost.readingTime}
+                            </span>
+                          </div>
+                        </a>
+                      ),
                   )}
                 </div>
               )}
@@ -234,7 +229,8 @@ const currentSubpostDetails = isCurrentSubpost
       const { top: itemTop, height: itemHeight } =
         activeItem.getBoundingClientRect()
 
-      const currentItemTop = itemTop - areaTop + state.scrollArea.scrollTop
+      const currentItemTop =
+        itemTop - areaTop + state.scrollArea.scrollTop
       const targetScroll = Math.max(
         0,
         Math.min(

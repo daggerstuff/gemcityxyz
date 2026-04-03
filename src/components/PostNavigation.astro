@@ -2,9 +2,16 @@
 import Link from '@/components/Link.astro'
 import { buttonVariants } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
+import type { CollectionEntry } from 'astro:content'
 import { Icon } from 'astro-icon/components'
 
-const { newerPost, olderPost, parentPost } = Astro.props
+interface Props {
+  newerPost: CollectionEntry<'blog'> | null | undefined
+  olderPost: CollectionEntry<'blog'> | null | undefined
+  parentPost: CollectionEntry<'blog'> | null | undefined
+}
+
+const { newerPost, olderPost, parentPost } = Astro.props as Props
 const isSubpost = !!parentPost
 ---
 
@@ -34,7 +41,7 @@ const isSubpost = !!parentPost
       <span class="w-full text-left text-sm text-balance text-ellipsis">
         {
           olderPost?.data.title ||
-            (isSubpost ? 'No older subpost' : "You're at the oldest post!")
+          (isSubpost ? 'No older subpost' : "You're at the oldest post!")
         }
       </span>
     </div>
@@ -82,7 +89,7 @@ const isSubpost = !!parentPost
       <span class="w-full text-right text-sm text-balance text-ellipsis">
         {
           newerPost?.data.title ||
-            (isSubpost ? 'No newer subpost' : "You're at the newest post!")
+          (isSubpost ? 'No newer subpost' : "You're at the newest post!")
         }
       </span>
     </div>
