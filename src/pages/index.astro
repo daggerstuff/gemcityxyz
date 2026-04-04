@@ -3,10 +3,9 @@ import BlogCard from '@/components/BlogCard.astro'
 import Link from '@/components/Link.astro'
 import PageHead from '@/components/PageHead.astro'
 import { buttonVariants } from '@/components/ui/button'
-import { ICON_MAP, SITE, SOCIAL_LINKS } from '@/consts'
+import { SITE, SOCIAL_LINKS } from '@/consts'
 import Layout from '@/layouts/Layout.astro'
 import { getRecentPosts } from '@/lib/data-utils'
-import type { SocialLink } from '@/types'
 import { Icon } from 'astro-icon/components'
 
 // Error handling for fetching recent posts
@@ -52,20 +51,9 @@ const websiteSchema = {
   },
 }
 
-const highlights = [
-  'Designing human-centered AI systems that do not flatten human nuance.',
-  'Building practical web products while writing about the social cost of technology.',
-]
-
-const coreStack = [
-  'TypeScript',
-  'Astro',
-  'React',
-  'LLM Systems',
-  'Content Design',
-]
-
-const emailLink = SOCIAL_LINKS.find((link) => link.label === 'Email')
+const emailLink =
+  SOCIAL_LINKS.find((link) => link.href.startsWith('mailto:')) ||
+  SOCIAL_LINKS.find((link) => link.label.toLowerCase() === 'email')
 ---
 
 <Layout class="max-w-3xl">
@@ -129,98 +117,22 @@ const emailLink = SOCIAL_LINKS.find((link) => link.label === 'Email')
               Explore my work
             </Link>
           </div>
-
-          <!-- Social Icons -->
-          <div class="pt-2">
-            <ul class="flex flex-wrap items-center gap-2" role="list">
-              {
-                SOCIAL_LINKS.map(({ href, label }: SocialLink) => (
-                  <li>
-                    <Link
-                      href={href}
-                      aria-label={label}
-                      title={label}
-                      class={
-                        buttonVariants({ variant: 'outline', size: 'icon' }) +
-                        ' bg-background/80 backdrop-blur-sm'
-                      }
-                      external={
-                        href.startsWith('http') || href.startsWith('mailto:')
-                      }
-                    >
-                      <Icon
-                        name={
-                          ICON_MAP[label as keyof typeof ICON_MAP] ||
-                          'lucide:message-circle-question'
-                        }
-                        class="size-4"
-                      />
-                    </Link>
-                  </li>
-                ))
-              }
-            </ul>
-          </div>
         </div>
       </div>
-    </div>
-  </section>
-
-  <!-- Current Focus -->
-  <section class="mt-8">
-    <div class="mb-6">
-      <h2 class="mb-2 text-2xl font-semibold">Current Focus</h2>
-      <p class="text-muted-foreground text-sm">
-        What I am building and writing about right now.
-      </p>
-    </div>
-
-    <div class="space-y-4">
-      <ul class="space-y-3" aria-label="Current focus areas">
-        {
-          highlights.map((item) => (
-            <li class="text-muted-foreground border-border/50 bg-muted/20 rounded-md border px-4 py-3 text-sm leading-relaxed">
-              {item}
-            </li>
-          ))
-        }
-      </ul>
-      <ul class="flex flex-wrap items-center gap-2" aria-label="Core stack">
-        {
-          coreStack.map((item) => (
-            <li class="bg-background text-muted-foreground rounded-full border px-2.5 py-1 text-xs font-medium">
-              {item}
-            </li>
-          ))
-        }
-      </ul>
-      <Link
-        href="/about"
-        class="text-primary hover:text-primary/80 inline-flex items-center gap-1.5 pt-1 text-sm font-medium transition-colors"
-      >
-        See full background
-        <Icon name="lucide:arrow-right" class="size-4" />
-      </Link>
     </div>
   </section>
 
   <!-- Latest from the blog -->
   {
     latestPosts && latestPosts.length > 0 && (
-      <section class="mt-12">
-        <div class="mb-6 flex items-center justify-between">
+      <section class="mt-10">
+        <div class="mb-4 flex items-center justify-between">
           <div>
-            <h2 class="mb-2 text-2xl font-semibold">Latest from the blog</h2>
-            <p class="text-muted-foreground text-sm">
-              Recent writing and experiments.
-            </p>
+            <h2 class="text-2xl font-semibold">Latest writing</h2>
           </div>
           <Link
             href="/blog"
-            class={
-              buttonVariants({ variant: 'ghost' }) +
-              ' hidden items-center gap-1.5 sm:flex'
-            }
+            class="text-primary hover:text-primary/80 inline-flex min-h-11 items-center gap-1.5 px-2 text-sm font-medium transition-colors"
           >
             View all
             <Icon name="lucide:arrow-right" class="size-4" />
@@ -234,56 +146,24 @@ const emailLink = SOCIAL_LINKS.find((link) => link.label === 'Email')
             </article>
           ))}
         </div>
-
-        <article class="mt-2 sm:hidden">
-          <Link
-            href="/blog"
-            aria-label="View all blog posts"
-            class="group border-border/50 bg-muted/20 hover:bg-muted/40 hover:border-primary/30 block rounded-md border px-2 py-3 transition-all duration-200"
-          >
-            <div class="flex items-center gap-3">
-              <div
-                class="bg-primary/10 dark:bg-primary/20 group-hover:bg-primary/20 dark:group-hover:bg-primary/30 flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-lg transition-colors"
-                aria-hidden="true"
-              >
-                <Icon name="lucide:library" class="text-primary size-5" />
-              </div>
-              <div class="min-w-0 flex-1">
-                <div class="flex items-center gap-2">
-                  <span class="text-foreground group-hover:text-primary text-sm font-semibold transition-colors">
-                    View all posts
-                  </span>
-                  <Icon
-                    name="lucide:arrow-right"
-                    class="text-primary/70 group-hover:text-primary size-4 shrink-0 transition-all group-hover:translate-x-0.5"
-                    aria-hidden="true"
-                  />
-                </div>
-                <p class="text-muted-foreground mt-0.5 text-xs">
-                  Explore all articles and tutorials
-                </p>
-              </div>
-            </div>
-          </Link>
-        </article>
       </section>
     )
   }
 
   <!-- Compact Contact CTA -->
-  <section class="mt-12">
+  <section class="mt-10">
     <div
-      class="border-border/70 bg-muted/20 flex flex-wrap items-center justify-between gap-4 rounded-lg border px-4 py-4 sm:px-5"
+      class="border-border/60 flex flex-wrap items-center justify-between gap-3 border-t pt-6"
     >
-      <p class="text-muted-foreground text-sm leading-relaxed">
-        Open to thoughtful collaborations and weird internet ideas.
+      <p class="text-muted-foreground text-sm">
+        Open to collaborations and experiments.
       </p>
       {
         emailLink && (
           <Link
             href={emailLink.href}
             class={
-              buttonVariants({ variant: 'outline' }) +
+              buttonVariants({ variant: 'ghost' }) +
               ' inline-flex items-center gap-2'
             }
           >
