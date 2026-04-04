@@ -1,6 +1,6 @@
 # Gem City
 
-[![License](https://img.shields.io/github/license/nochadisfaction/gemcityxyz?color=0a0a0a&logo=github&logoColor=fff&style=for-the-badge)](LICENSE)
+[![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
 **Gem City** is a customized version of the [astro-erudite](https://github.com/jktrn/astro-erudite) theme, enhanced with additional features and modifications for a more complete blogging experience.
 
